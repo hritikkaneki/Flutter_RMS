@@ -1,0 +1,20 @@
+include: package:very_good_analysis/analysis_options.yaml
+
+analyzer:
+  exclude:
+    - "**/*.g.dart"
+    - "**/*.freezed.dart"
+    - "**/*.gen.dart"
+  errors:
+    invalid_annotation_target: ignore
+  plugins:
+    - custom_lint
+
+linter:
+  rules:
+    public_member_api_docs: false
+    lines_longer_than_80_chars: false
+    always_use_package_imports: true
+    prefer_single_quotes: true
+    sort_pub_dependencies: false
+    avoid_print: true

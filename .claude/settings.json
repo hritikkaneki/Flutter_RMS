@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(flutter clean *)",
+      "Bash(timeout 60 flutter run -d web-server --web-port=8090 --web-hostname=localhost)",
+      "Bash(timeout 90 flutter run -d web-server --web-port=8090 --web-hostname=localhost)",
+      "Bash(timeout 90 flutter run -d chrome --web-port=8090)",
+      "Bash(rm lib/features/auth/domain/entities/*.freezed.dart lib/features/auth/data/dtos/*.freezed.dart 2>/dev/null; echo \"Deleted freezed files\")",
+      "Bash(timeout 120 flutter run -d edge --web-port=8090)"
+    ],
+    "additionalDirectories": [
+      "c:\\Users\\DELL\\IdeaProjects\\flutter_rms\\lib\\features\\auth\\domain\\entities"
+    ]
+  }
+}
