@@ -18,6 +18,13 @@ class ApiEndpoints {
   static const String categories = '/categories';
   static String category(String id) => '/categories/$id';
 
+  // Menu endpoints
+  static const String menu = '/menu';
+  static const String menuByCategory = '/menu/category';
+  static const String menuSearch = '/menu/search';
+  static const String menuVegetarian = '/menu/vegetarian';
+  static const String menuAllergen = '/menu/allergen';
+
   // Menu item endpoints
   static const String menuItems = '/menu-items';
   static String menuItem(String id) => '/menu-items/$id';
