@@ -66,7 +66,11 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     } on DioException catch (e) {
       if (e.response != null) {
         final statusCode = e.response!.statusCode;
-        final message = e.response!.data?['message'] ?? e.message ?? 'Unknown error';
+        final message = (e.response!.data is Map<String, dynamic>
+                ? (e.response!.data as Map<String, dynamic>)['message'] as String?
+                : null) ??
+            e.message ??
+            'Unknown error';
 
         if (statusCode == 401) {
           throw UnauthorizedException(message);
@@ -98,8 +102,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       await _dio.post(ApiEndpoints.logout);
     } on DioException catch (e) {
       // Logout errors are non-critical - we'll clear local data anyway
+      final data = e.response?.data;
+      final message = (data is Map<String, dynamic>
+              ? data['message'] as String?
+              : null) ??
+          'Logout failed';
       throw ServerException(
-        e.response?.data?['message'] ?? 'Logout failed',
+        message,
         e.response?.statusCode,
       );
     }
@@ -126,8 +135,13 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       if (e.response?.statusCode == 401) {
         throw UnauthorizedException('Refresh token expired');
       }
+      final data = e.response?.data;
+      final message = (data is Map<String, dynamic>
+              ? data['message'] as String?
+              : null) ??
+          'Token refresh failed';
       throw ServerException(
-        e.response?.data?['message'] ?? 'Token refresh failed',
+        message,
         e.response?.statusCode,
       );
     }
