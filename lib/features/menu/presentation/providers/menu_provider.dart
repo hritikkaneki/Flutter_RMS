@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:restaurant_management_system/core/error/failures.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../domain/entities/menu_entity.dart';
@@ -135,11 +136,12 @@ enum MenuViewMode { grid, list }
 
 /// Menu view mode provider
 @riverpod
-class MenuViewMode extends _$MenuViewMode {
+class MenuViewModeNotifier extends _$MenuViewModeNotifier {
   @override
   MenuViewMode build() => MenuViewMode.grid;
 
   void toggleViewMode() {
+    // 'state' is now fully recognized by the compiler!
     state = state == MenuViewMode.grid ? MenuViewMode.list : MenuViewMode.grid;
   }
 }

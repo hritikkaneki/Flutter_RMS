@@ -7,7 +7,7 @@ part 'cart_dto.g.dart';
 
 /// Cart item DTO
 @freezed
-class CartItemDto with _$CartItemDto {
+abstract class CartItemDto with _$CartItemDto {
   const CartItemDto._();
 
   const factory CartItemDto({
@@ -23,7 +23,7 @@ class CartItemDto with _$CartItemDto {
 
 /// Cart DTO
 @freezed
-class CartDto with _$CartDto {
+abstract class CartDto with _$CartDto {
   const CartDto._();
 
   const factory CartDto({
@@ -40,7 +40,7 @@ class CartDto with _$CartDto {
 
 /// Order DTO
 @freezed
-class OrderDto with _$OrderDto {
+abstract class OrderDto with _$OrderDto {
   const OrderDto._();
 
   const factory OrderDto({

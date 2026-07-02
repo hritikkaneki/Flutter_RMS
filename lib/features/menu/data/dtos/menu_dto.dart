@@ -5,7 +5,7 @@ part 'menu_dto.g.dart';
 
 /// Menu item DTO for API communication
 @freezed
-class MenuItemDto with _$MenuItemDto {
+abstract class MenuItemDto with _$MenuItemDto {
   const MenuItemDto._();
 
   const factory MenuItemDto({
@@ -31,7 +31,7 @@ class MenuItemDto with _$MenuItemDto {
 
 /// Menu section DTO
 @freezed
-class MenuSectionDto with _$MenuSectionDto {
+abstract class MenuSectionDto with _$MenuSectionDto {
   const MenuSectionDto._();
 
   const factory MenuSectionDto({
@@ -45,7 +45,7 @@ class MenuSectionDto with _$MenuSectionDto {
 
 /// Complete menu DTO
 @freezed
-class MenuDto with _$MenuDto {
+abstract class MenuDto with _$MenuDto {
   const MenuDto._();
 
   const factory MenuDto({

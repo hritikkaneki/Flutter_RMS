@@ -58,7 +58,7 @@ extension MenuCategoryX on MenuCategory {
 
 /// Menu item entity - domain model
 @freezed
-class MenuItem with _$MenuItem {
+abstract class MenuItem with _$MenuItem {
   const MenuItem._();
 
   const factory MenuItem({
@@ -96,7 +96,7 @@ class MenuItem with _$MenuItem {
 
 /// Menu section entity - groups items by category
 @freezed
-class MenuSection with _$MenuSection {
+abstract class MenuSection with _$MenuSection {
   const MenuSection._();
 
   const factory MenuSection({
@@ -119,7 +119,7 @@ class MenuSection with _$MenuSection {
 
 /// Complete menu entity
 @freezed
-class Menu with _$Menu {
+abstract class Menu with _$Menu {
   const Menu._();
 
   const factory Menu({

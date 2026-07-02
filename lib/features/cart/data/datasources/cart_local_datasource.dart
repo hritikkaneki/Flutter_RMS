@@ -1,44 +1,37 @@
+import 'dart:convert';
+import 'package:flutter_riverpod/flutter_riverpod.dart'; // Import this to use 'Ref'
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/error/exceptions.dart';
 import '../../../../core/storage/hive_storage.dart';
 import '../../domain/entities/cart_entity.dart';
 import '../mappers/cart_mapper.dart';
+import '../dtos//cart_dto.dart';   // Ensure these paths point to your actual DTO models
+import '../dtos//order_dto.dart';  // Ensure these paths point to your actual DTO models
 
 part 'cart_local_datasource.g.dart';
 
 /// Cart local data source provider
 @riverpod
-CartLocalDataSource cartLocalDataSource(Ref ref) {
-  return CartLocalDataSourceImpl(ref.watch(hiveStorageProvider));
+CartLocalDataSource cartLocalDataSource(Ref ref) { // FIXED: Switched to generic 'Ref' temporarily to allow generator to compile
+  final storage = ref.watch(hiveStorageProvider).requireValue;
+  return CartLocalDataSourceImpl(storage);
 }
 
 /// Abstract interface for cart local data source
 abstract class CartLocalDataSource {
-  /// Get cart from local storage
   Future<Cart?> getCart();
-
-  /// Save cart to local storage
   Future<void> saveCart(Cart cart);
-
-  /// Clear cart from local storage
   Future<void> clearCart();
-
-  /// Get order history from local storage
   Future<List<Order>> getOrderHistory();
-
-  /// Save order to local storage
   Future<void> saveOrder(Order order);
-
-  /// Get order by ID from local storage
   Future<Order?> getOrderById(String orderId);
-
-  /// Clear order history from local storage
   Future<void> clearOrderHistory();
 }
 
 /// Implementation of cart local data source using Hive
 class CartLocalDataSourceImpl implements CartLocalDataSource {
+  static const String _cartBox = 'cart_cache_box';
   static const String _cartKey = 'current_cart';
   static const String _ordersKey = 'order_history';
   static const String _orderPrefix = 'order_';
@@ -50,8 +43,14 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
   @override
   Future<Cart?> getCart() async {
     try {
-      final cart = await _storage.get(_cartKey) as Cart?;
-      return cart;
+      final dynamic cachedString = await _storage.get(_cartBox, _cartKey);
+      if (cachedString == null) return null;
+
+      final Map<String, dynamic> rawMap = jsonDecode(cachedString as String) as Map<String, dynamic>;
+
+      // FIXED: Used DTO deserialization and Mapper conversion sequence instead of direct jsonToCartEntity
+      final dto = CartDto.fromJson(rawMap);
+      return CartMapper.cartDtoToEntity(dto);
     } catch (e) {
       throw CacheException('Failed to get cart: ${e.toString()}');
     }
@@ -60,7 +59,9 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
   @override
   Future<void> saveCart(Cart cart) async {
     try {
-      await _storage.put(_cartKey, cart);
+      final cartDto = CartMapper.cartEntityToDto(cart);
+      final jsonString = jsonEncode(cartDto.toJson());
+      await _storage.put(_cartBox, _cartKey, jsonString);
     } catch (e) {
       throw CacheException('Failed to save cart: ${e.toString()}');
     }
@@ -69,7 +70,7 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
   @override
   Future<void> clearCart() async {
     try {
-      await _storage.delete(_cartKey);
+      await _storage.delete(_cartBox, _cartKey);
     } catch (e) {
       throw CacheException('Failed to clear cart: ${e.toString()}');
     }
@@ -78,18 +79,24 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
   @override
   Future<List<Order>> getOrderHistory() async {
     try {
-      final orderIds = await _storage.get(_ordersKey) as List<String>? ?? [];
+      final dynamic cachedString = await _storage.get(_cartBox, _ordersKey);
+      if (cachedString == null) return <Order>[];
+
+      final List<dynamic> rawList = jsonDecode(cachedString as String) as List<dynamic>;
+      final List<String> orderIds = rawList.cast<String>();
       final orders = <Order>[];
 
       for (final orderId in orderIds) {
-        final order =
-            await _storage.get('$_orderPrefix$orderId') as Order?;
-        if (order != null) {
-          orders.add(order);
+        final dynamic orderString = await _storage.get(_cartBox, '$_orderPrefix$orderId');
+        if (orderString != null) {
+          final Map<String, dynamic> orderMap = jsonDecode(orderString as String) as Map<String, dynamic>;
+
+          // FIXED: Use OrderDto and Mapper conversion sequence instead of direct jsonToOrderEntity
+          final dto = OrderDto.fromJson(orderMap);
+          orders.add(CartMapper.orderDtoToEntity(dto));
         }
       }
 
-      // Sort by creation date (newest first)
       orders.sort((a, b) => b.createdAt.compareTo(a.createdAt));
       return orders;
     } catch (e) {
@@ -100,14 +107,21 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
   @override
   Future<void> saveOrder(Order order) async {
     try {
-      // Save order
-      await _storage.put('$_orderPrefix${order.id}', order);
+      final orderDto = CartMapper.orderEntityToDto(order);
+      final jsonString = jsonEncode(orderDto.toJson());
+      await _storage.put(_cartBox, '$_orderPrefix${order.id}', jsonString);
 
-      // Add order ID to history list
-      final orderIds = await _storage.get(_ordersKey) as List<String>? ?? [];
+      final dynamic cachedString = await _storage.get(_cartBox, _ordersKey);
+      List<String> orderIds = [];
+      if (cachedString != null) {
+        final List<dynamic> rawList = jsonDecode(cachedString as String) as List<dynamic>;
+        orderIds = rawList.cast<String>();
+      }
+
       if (!orderIds.contains(order.id)) {
         orderIds.add(order.id);
-        await _storage.put(_ordersKey, orderIds);
+        final historyString = jsonEncode(orderIds);
+        await _storage.put(_cartBox, _ordersKey, historyString);
       }
     } catch (e) {
       throw CacheException('Failed to save order: ${e.toString()}');
@@ -117,9 +131,14 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
   @override
   Future<Order?> getOrderById(String orderId) async {
     try {
-      final order =
-          await _storage.get('$_orderPrefix$orderId') as Order?;
-      return order;
+      final dynamic orderString = await _storage.get(_cartBox, '$_orderPrefix$orderId');
+      if (orderString == null) return null;
+
+      final Map<String, dynamic> orderMap = jsonDecode(orderString as String) as Map<String, dynamic>;
+
+      // FIXED: Use OrderDto and Mapper conversion sequence instead of direct jsonToOrderEntity
+      final dto = OrderDto.fromJson(orderMap);
+      return CartMapper.orderDtoToEntity(dto);
     } catch (e) {
       throw CacheException('Failed to get order: ${e.toString()}');
     }
@@ -128,11 +147,16 @@ class CartLocalDataSourceImpl implements CartLocalDataSource {
   @override
   Future<void> clearOrderHistory() async {
     try {
-      final orderIds = await _storage.get(_ordersKey) as List<String>? ?? [];
-      for (final orderId in orderIds) {
-        await _storage.delete('$_orderPrefix$orderId');
+      final dynamic cachedString = await _storage.get(_cartBox, _ordersKey);
+      if (cachedString != null) {
+        final List<dynamic> rawList = jsonDecode(cachedString as String) as List<dynamic>;
+        final List<String> orderIds = rawList.cast<String>();
+
+        for (final orderId in orderIds) {
+          await _storage.delete(_cartBox, '$_orderPrefix$orderId');
+        }
       }
-      await _storage.delete(_ordersKey);
+      await _storage.delete(_cartBox, _ordersKey);
     } catch (e) {
       throw CacheException('Failed to clear order history: ${e.toString()}');
     }

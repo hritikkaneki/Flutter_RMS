@@ -1,4 +1,6 @@
+import 'package:dartz/dartz.dart' hide Order;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:restaurant_management_system/core/error/failures.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../domain/entities/cart_entity.dart';
@@ -148,9 +150,9 @@ class CartNotifier extends _$CartNotifier {
 class CheckoutNotifier extends _$CheckoutNotifier {
   @override
   AsyncValue<Order> build() {
-    return const AsyncValue.data(Order(
+    return AsyncValue.data(Order(
       id: '',
-      items: [],
+      items: const [],
       subtotal: 0,
       tax: 0,
       total: 0,
@@ -160,7 +162,7 @@ class CheckoutNotifier extends _$CheckoutNotifier {
   }
 
   /// Perform checkout
-  Future<Order> checkout({
+  Future<Either<Failure, Order>> checkout({
     required String tableNumber,
     String? specialInstructions,
   }) async {
@@ -182,14 +184,14 @@ class CheckoutNotifier extends _$CheckoutNotifier {
       },
     );
 
-    return result.getOrElse((_) => throw Exception('Checkout failed'));
+    return result;
   }
 
   /// Clear order state
   void reset() {
-    state = const AsyncValue.data(Order(
+    state = AsyncValue.data(Order(
       id: '',
-      items: [],
+      items: const [],
       subtotal: 0,
       tax: 0,
       total: 0,

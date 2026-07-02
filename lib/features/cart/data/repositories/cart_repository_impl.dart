@@ -1,4 +1,4 @@
-import 'package:dartz/dartz.dart';
+import 'package:dartz/dartz.dart' hide Order;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/error/exceptions.dart';

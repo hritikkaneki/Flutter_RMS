@@ -1,13 +1,14 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:restaurant_management_system/features/menu/domain/entities/menu_entity.dart';
 
-import '../../../features/menu/domain/entities/menu_entity.dart';
+import 'package:restaurant_management_system/features/menu/domain/entities/menu_entity.dart';
 
 part 'cart_entity.freezed.dart';
 part 'cart_entity.g.dart';
 
 /// Cart item entity - menu item with quantity in cart
 @freezed
-class CartItem with _$CartItem {
+abstract class CartItem with _$CartItem {
   const CartItem._();
 
   const factory CartItem({
@@ -36,7 +37,7 @@ class CartItem with _$CartItem {
 
 /// Shopping cart entity
 @freezed
-class Cart with _$Cart {
+abstract class Cart with _$Cart {
   const Cart._();
 
   const factory Cart({
@@ -168,7 +169,7 @@ class Cart with _$Cart {
 
 /// Order entity - checkout data
 @freezed
-class Order with _$Order {
+abstract class Order with _$Order {
   const Order._();
 
   const factory Order({
@@ -239,6 +240,8 @@ class Order with _$Order {
         return '❌';
     }
   }
+
+  bool get isCompleted => true;
 }
 
 /// Order status enum

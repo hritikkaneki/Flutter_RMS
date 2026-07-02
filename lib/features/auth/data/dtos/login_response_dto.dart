@@ -5,7 +5,7 @@ part 'login_response_dto.g.dart';
 
 /// User DTO
 @freezed
-class UserDto with _$UserDto {
+abstract class UserDto with _$UserDto {
   const UserDto._();
 
   const factory UserDto({
@@ -26,7 +26,7 @@ class UserDto with _$UserDto {
 
 /// Auth tokens DTO
 @freezed
-class AuthTokensDto with _$AuthTokensDto {
+abstract class AuthTokensDto with _$AuthTokensDto {
   const AuthTokensDto._();
 
   const factory AuthTokensDto({
@@ -40,7 +40,7 @@ class AuthTokensDto with _$AuthTokensDto {
 
 /// Login response DTO
 @freezed
-class LoginResponseDto with _$LoginResponseDto {
+abstract class LoginResponseDto with _$LoginResponseDto {
   const LoginResponseDto._();
 
   const factory LoginResponseDto({

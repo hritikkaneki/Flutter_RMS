@@ -1,4 +1,5 @@
-import 'package:dartz/dartz.dart';
+import 'package:dartz/dartz.dart' hide Order;
+import 'package:restaurant_management_system/features/cart/data/repositories/cart_repository_impl.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../../core/error/failures.dart';

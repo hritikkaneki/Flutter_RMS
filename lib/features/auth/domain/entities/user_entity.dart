@@ -46,8 +46,7 @@ extension UserRoleX on UserRole {
 
 /// User entity - domain model
 @freezed
-class UserEntity with _$UserEntity {
-  const UserEntity._();
+abstract class UserEntity with _$UserEntity {
 
   const factory UserEntity({
     required String id,
@@ -60,34 +59,37 @@ class UserEntity with _$UserEntity {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _UserEntity;
+  const UserEntity._();
 
   factory UserEntity.fromJson(Map<String, dynamic> json) =>
       _$UserEntityFromJson(json);
-}
+
+ }
 
 /// Auth tokens entity
 @freezed
-class AuthTokensEntity with _$AuthTokensEntity {
-  const AuthTokensEntity._();
+ abstract class AuthTokensEntity with _$AuthTokensEntity {
 
   const factory AuthTokensEntity({
     required String accessToken,
     required String refreshToken,
   }) = _AuthTokensEntity;
+  const AuthTokensEntity._();
 
   factory AuthTokensEntity.fromJson(Map<String, dynamic> json) =>
       _$AuthTokensEntityFromJson(json);
-}
+
+ }
 
 /// Login response entity
 @freezed
-class LoginResponseEntity with _$LoginResponseEntity {
-  const LoginResponseEntity._();
+abstract class LoginResponseEntity with _$LoginResponseEntity {
 
   const factory LoginResponseEntity({
     required UserEntity user,
     required AuthTokensEntity tokens,
   }) = _LoginResponseEntity;
+  const LoginResponseEntity._();
 
   factory LoginResponseEntity.fromJson(Map<String, dynamic> json) =>
       _$LoginResponseEntityFromJson(json);

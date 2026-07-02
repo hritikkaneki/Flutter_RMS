@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:restaurant_management_system/features/auth/domain/entities/user_entity.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../features/auth/presentation/providers/auth_provider.dart';
@@ -90,6 +91,7 @@ GoRouter goRouter(Ref ref) {
         path: AppRoutes.orderHistory,
         builder: (context, state) => const OrderHistoryScreen(),
       ),
+  ]
   );
 }
 
