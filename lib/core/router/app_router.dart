@@ -6,6 +6,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
+import '../../features/menu/presentation/screens/menu_screen.dart';
 import 'app_routes.dart';
 
 part 'app_router.g.dart';
@@ -72,6 +73,11 @@ GoRouter goRouter(Ref ref) {
         path: AppRoutes.home,
         builder: (context, state) => const HomeScreen(),
       ),
+      // Menu screen route
+      GoRoute(
+        path: AppRoutes.menu,
+        builder: (context, state) => const MenuScreen(),
+      ),
     ],
   );
 }
@@ -97,51 +103,95 @@ class HomeScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.check_circle_outline,
-              size: 100,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'Welcome, ${user?.name ?? 'User'}!',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Role: ${user?.role.displayName ?? 'Unknown'}',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-            ),
-            const SizedBox(height: 24),
-            Text(
-              'You are successfully logged in!',
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-            const SizedBox(height: 48),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 48),
-              child: Column(
-                children: [
-                  const Text(
-                    '🎉 Phase 3 Complete!',
-                    style: TextStyle(fontSize: 24),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'GoRouter navigation is working!\n\nNext: Build feature modules (Menu, Orders, Tables, Kitchen)',
-                    style: Theme.of(context).textTheme.bodyMedium,
-                    textAlign: TextAlign.center,
-                  ),
-                ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            children: [
+              Icon(
+                Icons.check_circle_outline,
+                size: 100,
+                color: Theme.of(context).colorScheme.primary,
               ),
-            ),
-          ],
+              const SizedBox(height: 24),
+              Text(
+                'Welcome, ${user?.name ?? 'User'}!',
+                style: Theme.of(context).textTheme.headlineMedium,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Role: ${user?.role.displayName ?? 'Unknown'}',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'You are successfully logged in!',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 48),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    const Text(
+                      '🎉 Phase 4 Started!',
+                      style: TextStyle(fontSize: 24),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Feature modules are being built. Explore the menu to get started!',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(height: 32),
+                    // Feature buttons
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.restaurant_menu),
+                        label: const Text('Browse Menu'),
+                        onPressed: () => context.go(AppRoutes.menu),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      '⏳ Coming Soon',
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: null,
+                            child: const Text('Orders'),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: null,
+                            child: const Text('Tables'),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: null,
+                            child: const Text('Kitchen'),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
