@@ -45,7 +45,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         },
         data: (user) {
           if (user != null) {
-            // Navigation will be handled by GoRouter later
+            // Navigation handled automatically by GoRouter redirect
             context.showSuccessSnackBar('Welcome back, ${user.name}!');
           }
         },

@@ -12,29 +12,6 @@ class SplashScreen extends ConsumerStatefulWidget {
 }
 
 class _SplashScreenState extends ConsumerState<SplashScreen> {
-  @override
-  void initState() {
-    super.initState();
-    _checkAuthStatus();
-  }
-
-  Future<void> _checkAuthStatus() async {
-    // Wait for auth state to load
-    await Future.delayed(const Duration(seconds: 2));
-
-    if (!mounted) return;
-
-    // Check if authenticated
-    final isAuth = ref.read(isAuthenticatedProvider);
-
-    // TODO: Navigate using GoRouter
-    // For now, just show a message
-    if (isAuth) {
-      context.showSuccessSnackBar('Already logged in!');
-    } else {
-      context.showSnackBar('Please login');
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
