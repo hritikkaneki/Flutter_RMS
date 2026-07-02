@@ -7,6 +7,8 @@ import '../../features/auth/presentation/providers/auth_provider.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/splash_screen.dart';
 import '../../features/menu/presentation/screens/menu_screen.dart';
+import '../../features/cart/presentation/screens/cart_screen.dart';
+import '../../features/cart/presentation/screens/order_history_screen.dart';
 import 'app_routes.dart';
 
 part 'app_router.g.dart';
@@ -78,7 +80,16 @@ GoRouter goRouter(Ref ref) {
         path: AppRoutes.menu,
         builder: (context, state) => const MenuScreen(),
       ),
-    ],
+      // Cart screen route
+      GoRoute(
+        path: AppRoutes.cart,
+        builder: (context, state) => const CartScreen(),
+      ),
+      // Order history route
+      GoRoute(
+        path: AppRoutes.orderHistory,
+        builder: (context, state) => const OrderHistoryScreen(),
+      ),
   );
 }
 
@@ -156,6 +167,24 @@ class HomeScreen extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.shopping_cart),
+                        label: const Text('Shopping Cart'),
+                        onPressed: () => context.go(AppRoutes.cart),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        icon: const Icon(Icons.receipt_long),
+                        label: const Text('Order History'),
+                        onPressed: () => context.go(AppRoutes.orderHistory),
+                      ),
+                    ),
+                    const SizedBox(height: 32),
                     Text(
                       '⏳ Coming Soon',
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
@@ -165,13 +194,6 @@ class HomeScreen extends ConsumerWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: null,
-                            child: const Text('Orders'),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
                         Expanded(
                           child: ElevatedButton(
                             onPressed: null,
